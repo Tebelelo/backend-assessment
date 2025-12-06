@@ -1,5 +1,5 @@
 import { supabase } from "../config/db";
-import { Student } from "../types/types";
+import { Student } from "../types";
 
 type StudentData = Omit<Student, "id">;
 

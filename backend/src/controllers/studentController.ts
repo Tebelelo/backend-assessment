@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as studentModel from '../models/student';
-import { Student } from '../types/types';
+import { Student } from '../types';
 
 export const getAllStudents = async (_req: Request, res: Response) => {
   try {
