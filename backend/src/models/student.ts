@@ -1,17 +1,12 @@
-import { supabase } from "../config/db.ts";
+import { supabase } from "../config/db";
+import { Student } from "../types/types";
+
+type StudentData = Omit<Student, "id">;
 
 //Add student
-export const addStudent = async (
-  name: string,
-  age: number,
-  email: string
-) => {
+export const addStudent = async (studentData: StudentData) => {
   try {
-    const { data, error } = await supabase
-      .from("students")
-      .insert({ name, age, email })
-      .select("*")
-      .single();
+    const { data, error } = await supabase.from("students").insert(studentData).select("*").single();
     if (error) {
       throw error;
     }
@@ -23,19 +18,9 @@ export const addStudent = async (
 };
 
 //Edit student
-export const editStudent = async (
-  id: number,
-  name: string,
-  age: number,
-  email: string
-) => {
+export const editStudent = async (id: number, studentData: Partial<StudentData>) => {
   try {
-    const { data, error } = await supabase
-      .from("students")
-      .update({ name, age, email })
-      .eq("id", id)
-      .select("*")
-      .single();
+    const { data, error } = await supabase.from("students").update(studentData).eq("id", id).select("*").single();
     if (error) throw error;
     return data;
   } catch (error) {
@@ -49,7 +34,7 @@ export const deleteStudent = async (id: number) => {
   try {
     const { error } = await supabase.from("students").delete().eq("id", id);
     if (error) throw error;
-    return { message: "Student deleted successfully" };
+    return true; // Return true on success
   } catch (error) {
     console.error("Error deleting student:", error);
     throw error;
@@ -57,12 +42,28 @@ export const deleteStudent = async (id: number) => {
 };
 
 //Get student
-export const getStudents = async (id?: number) => {
-  let query = supabase.from("students").select("*");
-  if (id) {
-    query = query.eq("id", id).single();
+export const getStudents = async (): Promise<Student[]> => {
+  try {
+    const { data, error } = await supabase.from("students").select("*");
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error("Error getting students:", error);
+    throw error;
   }
-  const { data, error } = await query;
-  if (error) throw error;
-  return data;
+};
+
+export const getStudentbyID = async (id: number): Promise<Student | null> => {
+  try {
+    const { data, error } = await supabase.from("students").select("*").eq("id", id).single();
+
+    if (error) {
+      if (error.code === 'PGRST116') return null;
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error(`Error getting student by ID ${id}:`, error);
+    throw error;
+  }
 };
