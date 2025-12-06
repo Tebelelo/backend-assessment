@@ -1,10 +1,6 @@
 {
-  "devDependencies": {
-    "@types/express": "^5.0.6"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.86.2",
-    "dotenv": "^17.2.3",
-    "supabase": "^2.65.6"
-  }
+  "name": "backend-assessment-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Project root for backend assessment."
 }

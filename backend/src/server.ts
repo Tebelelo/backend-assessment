@@ -7,6 +7,6 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use('/students', studentRoutes);
+app.use('/api/students', studentRoutes);
 
 export default app;
