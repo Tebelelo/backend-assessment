@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import EditStudent from './EditStudent';
 
 interface Student {
   id: number;
@@ -7,37 +7,78 @@ interface Student {
   email: string;
 }
 
-const dummyStudents: Student[] = [
-  { id: 1, name: "Alice Johnson", email: "alice.johnson@example.com" },
-  { id: 2, name: "Bob Smith", email: "bob.smith@example.com" },
-  { id: 3, name: "Charlie Brown", email: "charlie.brown@example.com" },
-  { id: 4, name: "Diana Prince", email: "diana.prince@example.com" },
-  { id: 5, name: "Ethan Hunt", email: "ethan.hunt@example.com" },
-];
+const API_URL = 'http://localhost:5000/api/students';
 
 export default function StudentList() {
   const [students, setStudents] = useState<Student[]>([]);
+  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error('Failed to fetch students');
+      }
+      const data: Student[] = await response.json();
+      setStudents(data);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Simulate API call with dummy data
-    setStudents(dummyStudents);
+    fetchStudents();
   }, []);
 
-  const handleDelete = (id: number) => {
-    setStudents(students.filter((s) => s.id !== id));
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Failed to delete student');
+      }
+      setStudents(students.filter((s) => s.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+    }
   };
 
   const handleEdit = (id: number) => {
-    console.log("Edit student with id:", id);
+    const studentToEdit = students.find((s) => s.id === id);
+    if (studentToEdit) {
+      setEditingStudent(studentToEdit);
+    }
   };
 
-  const handleAdd = () => {
-    const newStudent: Student = {
-      id: students.length + 1,
-      name: `New Student ${students.length + 1}`,
-      email: `new${students.length + 1}@example.com`,
-    };
-    setStudents([...students, newStudent]);
+  const handleAdd = async () => {
+    const name = prompt("Enter student name:");
+    const email = prompt("Enter student email:");
+    if (name && email) {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to add student');
+        }
+        const newStudent = await response.json();
+        setStudents([...students, newStudent]);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      }
+    }
+  };
+
+  const handleSaveEdit = async (updatedStudent: Student) => {
+    setStudents(students.map(s => s.id === updatedStudent.id ? updatedStudent : s));
+    setEditingStudent(null);
   };
 
   return (
@@ -50,6 +91,11 @@ export default function StudentList() {
         >
           Add Student
         </button>
+      </div>
+
+      <div className="mb-4">
+        {loading && <p>Loading...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
       </div>
 
       <table className="min-w-full border border-gray-200 rounded overflow-hidden">
@@ -67,7 +113,6 @@ export default function StudentList() {
               <td className="py-2 px-4 border-b">{student.id}</td>
               <td className="py-2 px-4 border-b">{student.name}</td>
               <td className="py-2 px-4 border-b">{student.email}</td>
-              <td className="py-2 px-4 border-b">{student.email}</td>
               <td className="py-2 px-4 border-b space-x-2">
                 <button
                   onClick={() => handleEdit(student.id)}
@@ -83,14 +128,7 @@ export default function StudentList() {
               </td>
             </tr>
           ))}
-          {error && (
-            <tr>
-              <td colSpan={5} className="text-center py-4 text-red-500 font-bold">
-                {error}
-              </td>
-            </tr>
-          )}
-          {!error && students.length === 0 && (
+          {!loading && students.length === 0 && (
             <tr>
               <td colSpan={5} className="text-center py-4">
                 No students found
