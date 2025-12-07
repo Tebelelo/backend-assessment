@@ -84,8 +84,20 @@ export default function StudentList() {
   };
 
   const handleSaveEdit = async (updatedStudent: Student) => {
-    setStudents(students.map(s => s.id === updatedStudent.id ? updatedStudent : s));
-    setEditingStudent(null);
+    try {
+      const response = await fetch(`${API_URL}/${updatedStudent.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedStudent),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update student');
+      }
+      setStudents(students.map(s => s.id === updatedStudent.id ? updatedStudent : s));
+      setEditingStudent(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+    }
   };
 
   return (
