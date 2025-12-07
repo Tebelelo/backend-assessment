@@ -59,12 +59,18 @@ export default function StudentList() {
   const handleAdd = async () => {
     const name = prompt("Enter student name:");
     const email = prompt("Enter student email:");
-    if (name && email) {
+    const ageString = prompt("Enter student age:");
+    if (name && email && ageString) {
+      const age = parseInt(ageString, 10);
+      if (isNaN(age)) {
+        setError("Please enter a valid age.");
+        return;
+      }
       try {
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email }),
+          body: JSON.stringify({ name, email, age }),
         });
         if (!response.ok) {
           throw new Error('Failed to add student');
