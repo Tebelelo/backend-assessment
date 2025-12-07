@@ -1,47 +1,199 @@
-# Backend Assessment
+--- a/README.md
++++ b/README.md
+@@ -1,14 +1,25 @@
+ # Knite Edu
+ 
+ <p align="center">
+-  <!-- You can add a logo here if you have one -->
++  <!-- 💡 UPDATE: Add your project's logo here. -->
++  <!-- <a href="your-live-project-url">
++    <img src="path/to/your/logo.png" alt="Logo" width="80" height="80">
++  </a> -->
++
++  <h3 align="center">Project Title</h3>
++
++  <p align="center">
++    A brief 1-2 sentence description of what your project does, who it's for, and what problem it solves.
++    <br />
++    <a href="#about-the-project"><strong>Explore the docs »</strong></a>
++    <br />
++    <br />
++    <a href="your-live-project-url">View Demo</a>
++    ·
++    <a href="https://github.com/your-username/your-repo/issues">Report Bug</a>
++    ·
++    <a href="https://github.com/your-username/your-repo/issues">Request Feature</a>
++  </p>
++</p>
++
++<!-- BADGES -->
++<p align="center">
++  <a href="https://opensource.org/licenses/MIT">
++    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
++  </a>
++  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React">
++  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js">
++  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase">
++</p>
++
++---
++
++<!-- TABLE OF CONTENTS -->
++<details>
++  <summary>Table of Contents</summary>
++  <ol>
++    <li><a href="#about-the-project">About The Project</a>
++      <ul>
++        <li><a href="#built-with">Built With</a></li>
++      </ul>
++    </li>
++    <li><a href="#getting-started">Getting Started</a>
++      <ul>
++        <li><a href="#prerequisites">Prerequisites</a></li>
++        <li><a href="#installation">Installation</a></li>
++      </ul>
++    </li>
++    <li><a href="#database-setup">Database Setup</a>
++      <ul>
++        <li><a href="#option-1-using-the-supabase-sql-editor">Option 1: Using the Supabase SQL Editor</a></li>
++        <li><a href="#option-2-using-supabase-migrations-recommended">Option 2: Using Supabase Migrations (Recommended)</a></li>
++      </ul>
++    </li>
++    <li><a href="#usage">Usage</a></li>
++    <li><a href="#roadmap">Roadmap</a></li>
++    <li><a href="#contributing">Contributing</a></li>
++    <li><a href="#license">License</a></li>
++    <li><a href="#contact">Contact</a></li>
++    <li><a href="#acknowledgments">Acknowledgments</a></li>
++  </ol>
++</details>
++
++---
++
++## About The Project
++
++<!-- 💡 UPDATE: A good screenshot or GIF of your project in action is highly recommended! -->
++<!-- ![Product Screenshot](path/to/screenshot.png) -->
++
++Here's a more detailed description of your project. Explain the features, your motivation for creating it, and what makes it stand out.
++
++### Built With
++
++This project is built with a modern full-stack architecture.
++
++*   [React](https://reactjs.org/)
++*   [Node.js](https://nodejs.org/)
++*   [Express.js](https://expressjs.com/)
++*   [Supabase/Postgress](https://supabase.io/)
++
++---
++
++## Getting Started
++
++To get a local copy up and running, follow these simple steps.
++
++### Prerequisites
++
++Make sure you have the following tools installed on your machine.
++
++*   **Node.js** (v18.x or later recommended)
++    You can download it from [nodejs.org](https://nodejs.org/).
++*   **Supabase Account & CLI**
++    1.  Create an account at [supabase.com](https://supabase.com/).
++    2.  Install the Supabase CLI.
++        ```sh
++        npm install supabase --save-dev
++        ```
++
++### Installation
++
++1.  **Clone the repository**
++    ```sh
++    git clone https://github.com/your-username/your-repo.git
++    cd your-repo
++    ```
++
++2.  **Set up Backend**
++    *   Navigate to the backend directory and install dependencies.
++        ```sh
++        cd backend
++        npm install
++        ```
++    *   Create a `.env` file by copying the example.
++        ```sh
++        cp .env.example .env
++        ```
++    *   Update the `.env` file with your Supabase Project URL and Anon Key. You can find these in your Supabase project dashboard under `Project Settings > API`.
++
++3.  **Set up Frontend**
++    *   Navigate to the frontend directory and install dependencies.
++        ```sh
++        cd ../frontend
++        npm install
++        ```
++    *   Create a `.env` file by copying the example.
++        ```sh
++        cp .env.example .env
++        ```
++    *   The `REACT_APP_BACKEND_URL` should already be set for local development.
++
++---
++
++## Database Setup
++
++You have two options for setting up the database schema. Using migrations is the recommended approach for a robust development workflow.
++
++### Option 1: Using the Supabase SQL Editor
++
++Copy the SQL code below and run it directly in the **SQL Editor** in your Supabase project dashboard.
++
++```sql
++-- Create Students table
++CREATE TABLE students (
++    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
++    name TEXT NOT NULL,
++    age INTEGER,
++    email TEXT NOT NULL UNIQUE,
++    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
++    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
++);
++
++-- Create index on email for faster lookups
++CREATE INDEX students_email_idx ON students(email);
++
++-- Create function to update updated_at timestamp
++CREATE OR REPLACE FUNCTION update_updated_at_column()
++RETURNS TRIGGER AS $$
++BEGIN
++    NEW.updated_at = TIMEZONE('utc'::text, NOW());
++    RETURN NEW;
++END;
++$$ language 'plpgsql';
++
++-- Create trigger to automatically update updated_at
++CREATE TRIGGER update_students_updated_at 
++    BEFORE UPDATE ON students 
++    FOR EACH ROW 
++    EXECUTE FUNCTION update_updated_at_column();
++```
++
 
-## Setup
-
-### Backend
-cd backend
-npm install
-npm run dev
-
-### Frontend
-cd frontend
-npm install
-npm start
-
-Open http://localhost:3000
-
-Objective:
-You will be working on a project where you need to implement and connect backend functionality with a front-end dashboard. Your goal is to complete the CRUD operations for students and ensure the front-end interacts seamlessly with the backend.
-What you need to do:
-1.	Clone the repository provided below.
-2.	Follow the instructions in the README file to set up the project locally.
-3.	Implement the required backend endpoints.
-4.	Integrate the front-end dashboard with your backend endpoints.
-5.	Add an Edit Student feature.
-6.	Test your functionality to ensure it works as expected.
-Notes for the Candidate
-•	Backend uses Express (or NestJS if preferred) with REST endpoints:
-o	GET /students – list all students
-o	POST /students – add a new student
-o	PUT /students/:id – edit a student
-o	DELETE /students/:id – delete a student
-•	Frontend uses React + TypeScript + Tailwind, hooked up to the backend API via api.ts.
-•	Database can be SQLite, Postgres, or even an in-memory store for simplicity.
-•	README.md in the root should include setup instructions:
-o	cd backend && npm install && npm run dev
-o	cd frontend && npm install && npm start
-o	Open frontend on localhost:3000 and test CRUD.
-
-Assessment Guidelines:
-•	You have 3 hours to complete the task.
-•	You may use any resources or documentation, but the work must be your own.
-•	Please commit your work regularly and push your final solution to the repo.
-Repository Link:
-https://github.com/MissRea09/backend-assessment 
-We look forward to seeing your solution and creativity. Good luck!
-
-
++## Usage
++
++You will need to run both the frontend and backend servers concurrently in separate terminal windows.
++
++1.  **Start the Backend Server**
++    *   In a terminal, navigate to the `backend` directory:
++        ```sh
++        cd backend
++        npm start
++        ```
++    *   The backend API will be running on `http://localhost:5000`.
++
++2.  **Start the Frontend App**
++    *   In a *separate* terminal, navigate to the `frontend` directory:
++        ```sh
++        cd frontend
++        npm start
++        ```
++    *   Your browser will open to `http://localhost:3000` to display the application.
