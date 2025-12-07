@@ -1,43 +1,4 @@
---- a/README.md
-+++ b/README.md
-@@ -1,14 +1,25 @@
- # Knite Edu
- 
- <p align="center">
--  <!-- You can add a logo here if you have one -->
-+  <!-- 💡 UPDATE: Add your project's logo here. -->
-+  <!-- <a href="your-live-project-url">
-+    <img src="path/to/your/logo.png" alt="Logo" width="80" height="80">
-+  </a> -->
-+
-+  <h3 align="center">Project Title</h3>
-+
-+  <p align="center">
-+    A brief 1-2 sentence description of what your project does, who it's for, and what problem it solves.
-+    <br />
-+    <a href="#about-the-project"><strong>Explore the docs »</strong></a>
-+    <br />
-+    <br />
-+    <a href="your-live-project-url">View Demo</a>
-+    ·
-+    <a href="https://github.com/your-username/your-repo/issues">Report Bug</a>
-+    ·
-+    <a href="https://github.com/your-username/your-repo/issues">Request Feature</a>
-+  </p>
-+</p>
-+
-+<!-- BADGES -->
-+<p align="center">
-+  <a href="https://opensource.org/licenses/MIT">
-+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
-+  </a>
-+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React">
-+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js">
-+  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase">
-+</p>
-+
-+---
-+
+
 +<!-- TABLE OF CONTENTS -->
 +<details>
 +  <summary>Table of Contents</summary>
