@@ -5,6 +5,7 @@ interface Student {
   id: number;
   name: string;
   email: string;
+  age: number;
 }
 
 const API_URL = 'http://localhost:5000/api/students';
@@ -104,6 +105,7 @@ export default function StudentList() {
             <th className="py-2 px-4 border-b">ID</th>
             <th className="py-2 px-4 border-b">Name</th>
             <th className="py-2 px-4 border-b">Email</th>
+            <th className="py-2 px-4 border-b">Age</th>
             <th className="py-2 px-4 border-b">Actions</th>
           </tr>
         </thead>
@@ -113,6 +115,7 @@ export default function StudentList() {
               <td className="py-2 px-4 border-b">{student.id}</td>
               <td className="py-2 px-4 border-b">{student.name}</td>
               <td className="py-2 px-4 border-b">{student.email}</td>
+              <td className="py-2 px-4 border-b">{student.age}</td>
               <td className="py-2 px-4 border-b space-x-2">
                 <button
                   onClick={() => handleEdit(student.id)}
