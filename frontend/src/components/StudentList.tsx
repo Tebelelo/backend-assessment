@@ -101,63 +101,62 @@ export default function StudentList() {
   };
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Students</h2>
+    <div className="p-4 md:p-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-0">Students</h2>
         <button
           onClick={handleAdd}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full md:w-auto"
         >
           Add Student
         </button>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 text-center">
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">Error: {error}</p>}
       </div>
 
-      <table className="min-w-full border border-gray-200 rounded overflow-hidden">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="py-2 px-4 border-b">ID</th>
-            <th className="py-2 px-4 border-b">Name</th>
-            <th className="py-2 px-4 border-b">Email</th>
-            <th className="py-2 px-4 border-b">Age</th>
-            <th className="py-2 px-4 border-b">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map((student) => (
-            <tr key={student.id} className="hover:bg-gray-50">
-              <td className="py-2 px-4 border-b">{student.id}</td>
-              <td className="py-2 px-4 border-b">{student.name}</td>
-              <td className="py-2 px-4 border-b">{student.email}</td>
-              <td className="py-2 px-4 border-b">{student.age}</td>
-              <td className="py-2 px-4 border-b space-x-2">
-                <button
-                  onClick={() => handleEdit(student.id)}
-                  className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
-                >Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(student.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-          {!loading && students.length === 0 && (
+      <div className="overflow-x-auto shadow-md rounded-lg">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-gray-100">
             <tr>
-              <td colSpan={5} className="text-center py-4">
-                No students found
-              </td>
+              <th className="py-3 px-4 text-left border-b">ID</th>
+              <th className="py-3 px-4 text-left border-b">Name</th>
+              <th className="py-3 px-4 text-left border-b">Email</th>
+              <th className="py-3 px-4 text-left border-b">Age</th>
+              <th className="py-3 px-4 text-left border-b">Actions</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white">
+            {students.map((student) => (
+              <tr key={student.id} className="hover:bg-gray-50">
+                <td className="py-3 px-4 border-b">{student.id}</td>
+                <td className="py-3 px-4 border-b whitespace-nowrap">{student.name}</td>
+                <td className="py-3 px-4 border-b">{student.email}</td>
+                <td className="py-3 px-4 border-b">{student.age}</td>
+                <td className="py-3 px-4 border-b space-x-2 whitespace-nowrap">
+                  <button
+                    onClick={() => handleEdit(student.id)}
+                    className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
+                  >Edit</button>
+                  <button
+                    onClick={() => handleDelete(student.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >Delete</button>
+                </td>
+              </tr>
+            ))}
+            {!loading && students.length === 0 && (
+              <tr>
+                <td colSpan={5} className="text-center py-4">
+                  No students found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       {editingStudent && (
         <EditStudent
           student={editingStudent}

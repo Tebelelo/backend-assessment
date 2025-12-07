@@ -32,8 +32,8 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onSave, onClose }) =
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
+      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md m-4">
         <h2 className="text-2xl font-bold mb-4">Edit Student</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
