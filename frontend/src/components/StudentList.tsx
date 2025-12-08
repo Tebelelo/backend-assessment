@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import EditStudent from './EditStudent';
+import { getStudents , addStudent, editStudent, deleteStudent } from "../services/api";
 
 interface Student {
   id: number;
@@ -7,8 +8,6 @@ interface Student {
   email: string;
   age: number;
 }
-
-const API_URL = 'http://localhost:5000/api/students';
 
 export default function StudentList() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -19,12 +18,8 @@ export default function StudentList() {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      const response = await fetch(API_URL);
-      if (!response.ok) {
-        throw new Error('Failed to fetch students');
-      }
-      const data: Student[] = await response.json();
-      setStudents(data);
+      const response = await getStudents();
+      setStudents(response.data);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
@@ -39,11 +34,8 @@ export default function StudentList() {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-      if (!response.ok) {
-        throw new Error('Failed to delete student');
-      }
-      setStudents(students.filter((s) => s.id !== id));
+      await deleteStudent(id);
+      setStudents((prevStudents) => prevStudents.filter((s) => s.id !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
     }
@@ -67,16 +59,10 @@ export default function StudentList() {
         return;
       }
       try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, age }),
-        });
-        if (!response.ok) {
-          throw new Error('Failed to add student');
-        }
-        const newStudent = await response.json();
-        setStudents([...students, newStudent]);
+        setError(null); // Clear previous errors
+        const response = await addStudent({ name, email, age });
+        const newStudent = response.data;
+        setStudents((prevStudents) => [...prevStudents, newStudent]); // Use functional update for safety
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An unknown error occurred');
       }
@@ -85,15 +71,9 @@ export default function StudentList() {
 
   const handleSaveEdit = async (updatedStudent: Student) => {
     try {
-      const response = await fetch(`${API_URL}/${updatedStudent.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedStudent),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update student');
-      }
-      setStudents(students.map(s => s.id === updatedStudent.id ? updatedStudent : s));
+      const response = await editStudent(updatedStudent.id, updatedStudent);
+      const savedStudent = response.data;
+      setStudents(students.map(s => s.id === savedStudent.id ? savedStudent : s)); 
       setEditingStudent(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');

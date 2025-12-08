@@ -53,6 +53,8 @@ export const getStudents = async (): Promise<Student[]> => {
   }
 };
 
+
+//Get by ID
 export const getStudentbyID = async (id: number): Promise<Student | null> => {
   try {
     const { data, error } = await supabase.from("students").select("*").eq("id", id).single();
